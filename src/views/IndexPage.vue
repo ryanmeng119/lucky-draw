@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import TagCanvas from '@/assets/tagcanvas.js'
+import TitleComponent from '@/views/TitleComponent.vue'
+import IconTrophy from '@/components/icons/IconTrophy.vue'
+import IconUpload from '@/components/icons/IconUpload.vue'
+import IconSlider from '@/components/icons/IconSlider.vue'
 
 type TagData = {
   key: number
@@ -93,6 +97,7 @@ const tagData: TagData[] = [
     name: ''
   }
 ]
+const showSetting = ref<boolean>(false)
 
 onMounted(() => {
   startTagCanvas()
@@ -104,11 +109,68 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <el-container class="h-full">
-    <el-header class="flex items-center justify-center bg-orange-200">
-      <div>Hello World~</div>
+  <el-container class="h-full bg-gray-600">
+    <el-header class="flex items-center justify-end p-0">
+      <!-- <TitleComponent></TitleComponent> -->
+      <div class="hanburger bg-gray-600 me-2" @click="showSetting = true">
+        <div class="hanburger-bar" />
+        <div class="hanburger-bar" />
+        <div class="hanburger-bar" />
+      </div>
+      <el-drawer v-model="showSetting" :with-header="false" size="20%">
+        <div class="flex flex-col">
+          <el-divider> 檢視 </el-divider>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <User />
+              </el-icon>
+              <span>人員名單</span>
+            </div>
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <List />
+              </el-icon>
+              <span>獎項名單</span>
+            </div>
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <IconTrophy></IconTrophy>
+              </el-icon>
+              <span>抽獎結果</span>
+            </div>
+          </div>
+          <el-divider> 設定 </el-divider>
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <IconUpload></IconUpload>
+              </el-icon>
+              <span>匯入名單</span>
+            </div>
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <UploadFilled />
+              </el-icon>
+              <span>匯入獎項</span>
+            </div>
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <IconSlider></IconSlider>
+              </el-icon>
+              <span>獎項配置</span>
+            </div>
+            <div class="flex items-center gap-1 cursor-pointer">
+              <el-icon color="#aaaaaa" :size="20">
+                <Refresh></Refresh>
+              </el-icon>
+              <span>重置設定</span>
+            </div>
+          </div>
+        </div>
+      </el-drawer>
     </el-header>
-    <el-main id="main" class="bg-blue-900">
+    <el-main id="main">
       <div id="tags">
         <ul v-for="item in tagData" :key="item.key">
           <li>
@@ -122,4 +184,31 @@ onUnmounted(() => {
   </el-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.opacity-75 {
+  opacity: 0.75;
+}
+.p-0 {
+  padding: 0 !important;
+}
+
+.hanburger {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  gap: 5px;
+}
+.hanburger-bar {
+  width: 20px;
+  border-radius: 5px;
+  border: 1px solid #fff;
+}
+
+:deep(.bg-gray) {
+  background-color: #f1f1f1;
+}
+</style>

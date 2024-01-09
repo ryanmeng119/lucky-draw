@@ -4,6 +4,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'reset-css'
 import '@/tailwind.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
 // import '@/assets/tagcanvas.js'
 
 import App from './App.vue'
@@ -13,5 +15,9 @@ const app = createApp(App)
 app.use(ElementPlus)
 app.use(createPinia())
 app.use(router)
-
 app.mount('#app')
+
+// 註冊 El-Icon
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
