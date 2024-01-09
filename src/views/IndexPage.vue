@@ -5,6 +5,8 @@ import TagCanvas from '@/assets/tagcanvas.js'
 import IconTrophy from '@/components/icons/IconTrophy.vue'
 import IconUpload from '@/components/icons/IconUpload.vue'
 import IconSlider from '@/components/icons/IconSlider.vue'
+import { MessageError } from '@/components/message'
+import SnowBackground from '@/views/SnowBackground.vue'
 
 type TagData = {
   key: number
@@ -25,7 +27,7 @@ const createCanvas = (selector = MAIN_ELEMENT_SELECTOR) => {
   if (targetElement) {
     targetElement.appendChild(canvas)
   } else {
-    console.error('Main element not found!')
+    MessageError('Main element not found!')
   }
 }
 
@@ -109,10 +111,11 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <SnowBackground></SnowBackground>
   <el-container class="h-full bg-gray-600">
     <el-header class="flex items-center justify-end p-0">
       <!-- <TitleComponent></TitleComponent> -->
-      <div class="hanburger bg-gray-600 me-2" @click="showSetting = true">
+      <div class="hanburger bg-gray-600 me-2 cursor-pointer" @click="showSetting = true">
         <div class="hanburger-bar" />
         <div class="hanburger-bar" />
         <div class="hanburger-bar" />
@@ -187,7 +190,7 @@ onUnmounted(() => {
   </el-container>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .opacity-75 {
   opacity: 0.75;
 }
