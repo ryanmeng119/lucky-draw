@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import TagCanvas from '@/assets/tagcanvas.js'
-import TitleComponent from '@/views/TitleComponent.vue'
+// import TitleComponent from '@/views/TitleComponent.vue'
 import IconTrophy from '@/components/icons/IconTrophy.vue'
 import IconUpload from '@/components/icons/IconUpload.vue'
 import IconSlider from '@/components/icons/IconSlider.vue'
@@ -118,49 +118,49 @@ onUnmounted(() => {
         <div class="hanburger-bar" />
       </div>
       <el-drawer v-model="showSetting" :with-header="false" size="20%">
-        <div class="flex flex-col">
-          <el-divider> 檢視 </el-divider>
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-1 cursor-pointer">
+        <div class="flex flex-col text-sm">
+          <el-divider class="my-5"> 檢視 </el-divider>
+          <div class="flex flex-col gap-1">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <User />
               </el-icon>
               <span>人員名單</span>
             </div>
-            <div class="flex items-center gap-1 cursor-pointer">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <List />
               </el-icon>
               <span>獎項名單</span>
             </div>
-            <div class="flex items-center gap-1 cursor-pointer">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <IconTrophy></IconTrophy>
               </el-icon>
               <span>抽獎結果</span>
             </div>
           </div>
-          <el-divider> 設定 </el-divider>
-          <div class="flex flex-col gap-2">
-            <div class="flex items-center gap-1 cursor-pointer">
+          <el-divider class="my-5"> 設定 </el-divider>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <IconUpload></IconUpload>
               </el-icon>
               <span>匯入名單</span>
             </div>
-            <div class="flex items-center gap-1 cursor-pointer">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <UploadFilled />
               </el-icon>
               <span>匯入獎項</span>
             </div>
-            <div class="flex items-center gap-1 cursor-pointer">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <IconSlider></IconSlider>
               </el-icon>
               <span>獎項配置</span>
             </div>
-            <div class="flex items-center gap-1 cursor-pointer">
+            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
               <el-icon color="#aaaaaa" :size="20">
                 <Refresh></Refresh>
               </el-icon>
@@ -168,9 +168,12 @@ onUnmounted(() => {
             </div>
           </div>
         </div>
+        <el-icon color="#aaaaaa" class="cursor-pointer absolute right-2 top-2">
+          <Close />
+        </el-icon>
       </el-drawer>
     </el-header>
-    <el-main id="main">
+    <el-main id="main" class="p-0">
       <div id="tags">
         <ul v-for="item in tagData" :key="item.key">
           <li>
