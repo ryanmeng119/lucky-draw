@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import TagCanvas from '@/assets/tagcanvas.js'
 // import TitleComponent from '@/views/TitleComponent.vue'
-import IconTrophy from '@/components/icons/IconTrophy.vue'
-import IconUpload from '@/components/icons/IconUpload.vue'
-import IconSlider from '@/components/icons/IconSlider.vue'
 import { MessageError } from '@/components/message'
 import SnowBackground from '@/views/SnowBackground.vue'
+import IndexPageMenuDrawer from './IndexPageMenuDrawer.vue'
 
 type TagData = {
   key: number
@@ -61,124 +59,58 @@ const reportWindowSize = () => {
 }
 
 // 畫面上跑動的項目
-const tagData: TagData[] = [
-  {
-    key: 1,
-    name: ''
-  },
-  {
-    key: 2,
-    name: ''
-  },
-  {
-    key: 3,
-    name: ''
-  },
-  {
-    key: 4,
-    name: ''
-  },
-  {
-    key: 5,
-    name: ''
-  },
-  {
-    key: 6,
-    name: ''
-  },
-  {
-    key: 7,
-    name: ''
-  },
-  {
-    key: 8,
-    name: ''
-  },
-  {
-    key: 9,
-    name: ''
+const luckyBallData: TagData[] = []
+
+const drawerVisible = ref<boolean>(false)
+const toggleDrawerVisible = () => {
+  drawerVisible.value = !drawerVisible.value
+}
+
+const isRunning = ref(false)
+const toggleIsRunning = () => {
+  isRunning.value = !isRunning.value
+}
+
+const start = () => {
+  toggleIsRunning()
+}
+const stop = () => {
+  toggleIsRunning()
+}
+
+const stateConfig = reactive({
+  thisRound: {
+    mode: '',
+    prizeId: null,
+    qty: 1
+    // remain: 1
   }
-]
-const showSetting = ref<boolean>(false)
+})
 
 onMounted(() => {
   startTagCanvas()
-  window.addEventListener('resize', reportWindowSize)
+  addEventListener('resize', reportWindowSize)
 })
 onUnmounted(() => {
-  window.removeEventListener('resize', reportWindowSize)
+  removeEventListener('resize', reportWindowSize)
 })
 </script>
 
 <template>
-  <SnowBackground></SnowBackground>
   <el-container class="h-full bg-gray-600">
-    <el-header class="flex items-center justify-end p-0">
+    <SnowBackground></SnowBackground>
+    <el-header class="flex items-center justify-end p-0 z-10">
       <!-- <TitleComponent></TitleComponent> -->
-      <div class="hanburger bg-gray-600 me-2 cursor-pointer" @click="showSetting = true">
+      <div class="hanburger bg-gray-600 me-2 cursor-pointer" @click="toggleDrawerVisible">
         <div class="hanburger-bar" />
         <div class="hanburger-bar" />
         <div class="hanburger-bar" />
       </div>
-      <el-drawer v-model="showSetting" :with-header="false" size="20%">
-        <div class="flex flex-col text-sm">
-          <el-divider class="my-5"> 檢視 </el-divider>
-          <div class="flex flex-col gap-1">
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <User />
-              </el-icon>
-              <span>人員名單</span>
-            </div>
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <List />
-              </el-icon>
-              <span>獎項名單</span>
-            </div>
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <IconTrophy></IconTrophy>
-              </el-icon>
-              <span>抽獎結果</span>
-            </div>
-          </div>
-          <el-divider class="my-5"> 設定 </el-divider>
-          <div class="flex flex-col">
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <IconUpload></IconUpload>
-              </el-icon>
-              <span>匯入名單</span>
-            </div>
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <UploadFilled />
-              </el-icon>
-              <span>匯入獎項</span>
-            </div>
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <IconSlider></IconSlider>
-              </el-icon>
-              <span>獎項配置</span>
-            </div>
-            <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
-              <el-icon color="#aaaaaa" :size="20">
-                <Refresh></Refresh>
-              </el-icon>
-              <span>重置設定</span>
-            </div>
-          </div>
-        </div>
-        <el-icon color="#aaaaaa" class="cursor-pointer absolute right-2 top-2">
-          <Close />
-        </el-icon>
-      </el-drawer>
+      <IndexPageMenuDrawer v-model:isVisible="drawerVisible"></IndexPageMenuDrawer>
     </el-header>
     <el-main id="main" class="p-0">
       <div id="tags">
-        <ul v-for="item in tagData" :key="item.key">
+        <ul v-for="item in luckyBallData" :key="item.key">
           <li>
             <a href="javascript:void(0);">
               {{ item.name ? item.name : item.key }}
@@ -186,6 +118,9 @@ onUnmounted(() => {
           </li>
         </ul>
       </div>
+      <el-button type="danger" class="absolute bottom-12 left-1/2">{{
+        isRunning ? 'Stop' : 'Start'
+      }}</el-button>
     </el-main>
   </el-container>
 </template>
@@ -212,9 +147,5 @@ onUnmounted(() => {
   width: 20px;
   border-radius: 5px;
   border: 1px solid #fff;
-}
-
-:deep(.bg-gray) {
-  background-color: #f1f1f1;
 }
 </style>
