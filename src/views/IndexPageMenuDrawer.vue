@@ -1,17 +1,13 @@
 <template>
-  <el-drawer :model-value="isVisible" :with-header="false" size="20%">
+  <el-drawer :model-value="isVisible" :with-header="false" size="220px">
     <div class="flex flex-col text-sm">
       <el-divider class="my-5"> 檢視 </el-divider>
       <div class="flex flex-col gap-1">
-        <div
-          class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1"
-          @click="toggleUploadDialogVisible"
-        >
+        <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
           <el-icon color="#aaaaaa" :size="20">
             <User />
           </el-icon>
           <span>人員名單</span>
-          <UploadMemberDialog v-model:isVisible="uploadDialogVisible"></UploadMemberDialog>
         </div>
         <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
           <el-icon color="#aaaaaa" :size="20">
@@ -28,12 +24,16 @@
       </div>
       <el-divider class="my-5"> 設定 </el-divider>
       <div class="flex flex-col">
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
+        <div
+          class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1"
+          @click="toggleUploadDialogVisible"
+        >
           <el-icon color="#aaaaaa" :size="20">
             <IconUpload></IconUpload>
           </el-icon>
           <span>匯入名單</span>
         </div>
+        <UploadMemberDialog v-model:isVisible="uploadDialogVisible"></UploadMemberDialog>
         <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
           <el-icon color="#aaaaaa" :size="20">
             <UploadFilled />
@@ -76,7 +76,7 @@ const closeDrawer = () => {
   emits('update:isVisible', false)
 }
 
-const uploadDialogVisible = ref(false)
+const uploadDialogVisible = ref<boolean>(false)
 const toggleUploadDialogVisible = () => {
   uploadDialogVisible.value = !uploadDialogVisible.value
 }

@@ -1,7 +1,7 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-type MenberData = {
+export type MenberData = {
   key: number
   name: string
   nameCH: string
