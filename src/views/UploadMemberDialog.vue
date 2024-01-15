@@ -1,13 +1,15 @@
 <template>
   <div>
-    <el-dialog :model-value="isVisible" title="匯入設定" width="400px" :before-close="closeDialog">
+    <el-dialog :model-value="isVisible" title="匯入設定" width="450px" :before-close="closeDialog">
       <div class="flex flex-col">
-        <el-radio-group class="mb-1.5" v-model="currRadio">
-          <el-radio v-for="option in importListOptions" :label="option.key" :key="option.key">{{
-            option.name
-          }}</el-radio>
-        </el-radio-group>
-        <!-- <el-checkbox v-model="checked1" label="覆蓋名單" /> -->
+        <div class="flex justify-between">
+          <el-radio-group class="mb-1 justify-between" v-model="currRadio">
+            <el-radio v-for="option in importListOptions" :label="option.key" :key="option.key">{{
+              option.name
+            }}</el-radio>
+          </el-radio-group>
+          <el-checkbox v-model="overwrite" class="me-1" label="覆蓋名單" />
+        </div>
         <div v-if="currRadio === SOURCE.CSV">
           <el-upload
             ref="upload"
@@ -62,6 +64,7 @@ const { isVisible } = defineProps({
 const emits = defineEmits(['update:isVisible'])
 
 const closeDialog = () => {
+  upload.value?.clearFiles()
   emits('update:isVisible', false)
 }
 
@@ -81,6 +84,7 @@ const importListOptions = [
     name: '手動輸入(單筆)'
   }
 ]
+const overwrite = ref(false)
 const upload = ref<UploadInstance>()
 const fileList = ref<UploadUserFile[]>([])
 
@@ -96,7 +100,7 @@ const parseCSV = (file: File) => {
     complete: (result: Papa.ParseResult<string[]>) => {
       // 更新參與人員名單
       // .csv 如果空一行會得到 [''] 的結果，所以用陣列長度過濾空行的部分
-      currentData.value = result.data
+      const resultData = result.data
         .filter((item) => item.length > 1)
         .map((item, index) => {
           return {
@@ -105,6 +109,7 @@ const parseCSV = (file: File) => {
             nameCH: item[1].trim()
           }
         })
+      currentData.value = overwrite.value ? resultData : memberList.value.concat(resultData)
     }
   })
 }
