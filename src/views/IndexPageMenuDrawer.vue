@@ -26,15 +26,17 @@
       <div class="flex flex-col">
         <div
           class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1"
-          @click="toggleUploadDialogVisible"
+          @click="toggleUploadDialogVisible('member')"
         >
           <el-icon color="#aaaaaa" :size="20">
             <IconUpload></IconUpload>
           </el-icon>
           <span>匯入名單</span>
         </div>
-        <UploadMemberDialog v-model:isVisible="uploadDialogVisible"></UploadMemberDialog>
-        <div class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1">
+        <div
+          class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded p-1"
+          @click="toggleUploadDialogVisible('prize')"
+        >
           <el-icon color="#aaaaaa" :size="20">
             <UploadFilled />
           </el-icon>
@@ -53,6 +55,10 @@
           <span>重置設定</span>
         </div>
       </div>
+      <UploadDialog
+        v-model:is-visible="uploadDialogVisible"
+        :upload-type="uploadType"
+      ></UploadDialog>
     </div>
     <el-icon color="#aaaaaa" class="cursor-pointer absolute right-2 top-2" @click="closeDrawer">
       <Close />
@@ -63,12 +69,15 @@
 import IconTrophy from '@/components/icons/IconTrophy.vue'
 import IconUpload from '@/components/icons/IconUpload.vue'
 import IconSlider from '@/components/icons/IconSlider.vue'
-import UploadMemberDialog from './UploadMemberDialog.vue'
+import UploadDialog from './UploadDialog.vue'
+import type { UploadType } from '@/utils/custom-types'
 import { ref } from 'vue'
 
 const { isVisible } = defineProps({
   isVisible: Boolean
 })
+
+const uploadType = ref<UploadType>('member')
 
 const emits = defineEmits(['update:isVisible'])
 
@@ -77,7 +86,8 @@ const closeDrawer = () => {
 }
 
 const uploadDialogVisible = ref<boolean>(false)
-const toggleUploadDialogVisible = () => {
+const toggleUploadDialogVisible = (type: UploadType) => {
+  uploadType.value = type
   uploadDialogVisible.value = !uploadDialogVisible.value
 }
 </script>

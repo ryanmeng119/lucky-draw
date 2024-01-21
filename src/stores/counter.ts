@@ -1,17 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-
-export type MenberData = {
-  key: number
-  name: string
-  nameCH: string
-}
-
-type PrizeData = {
-  key: number
-  name: string
-  number: number // 配置數量
-}
+import type { PrizeData, MemberData } from '@/utils/custom-types'
 
 // config = {
 //   number: number 參與人數
@@ -36,8 +25,8 @@ export const useCounterStore = defineStore('counter', () => {
   //   count.value++
   // }
   const drawTitle = ref<string>('')
-  const lotteryList = ref<PrizeData[]>([])
-  const memberList = ref<MenberData[]>([])
+  const prizeList = ref<PrizeData[]>([])
+  const memberList = ref<MemberData[]>([])
 
-  return { drawTitle, lotteryList, memberList }
+  return { drawTitle, prizeList, memberList }
 })
