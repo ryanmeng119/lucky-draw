@@ -26,7 +26,7 @@
           :on-remove="handleRemove"
           :on-exceed="handleExceed"
         >
-          <el-button type="primary" class="w-20 h-7 font-normal text-xs">選擇檔案</el-button>
+          <el-button type="primary" class="w-20 basic-btn-config">選擇檔案</el-button>
         </el-upload>
       </div>
       <div v-if="currRadio === SOURCE.INPUT">
@@ -60,8 +60,8 @@
     </div>
     <template #footer>
       <span class="flex justify-center">
-        <el-button class="w-20 h-7 font-normal" @click="closeDialog">取 消</el-button>
-        <el-button type="primary" class="w-20 h-7 font-normal" @click="submitUpload"
+        <el-button class="w-20 basic-btn-config" @click="closeDialog">取 消</el-button>
+        <el-button type="primary" class="w-20 basic-btn-config" @click="submitUpload"
           >確 認</el-button
         >
       </span>
@@ -193,11 +193,18 @@ const submitUpload = () => {
   border: solid 1px #dcdfe6;
   border-radius: 4px;
 }
+
 :deep(.el-upload-list) {
   margin: 0;
   flex: 1;
   li {
     margin: 0;
   }
+}
+
+.basic-btn-config {
+  font-size: 12px;
+  font-weight: 400;
+  height: 28px;
 }
 </style>
