@@ -9,5 +9,5 @@ export type MemberData = {
 export type PrizeData = {
   key: number
   name: string
-  number: number // 配置數量
+  quantity: number // 配置數量
 }

@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import 'reset-css'
 import '@/tailwind.css'
+import '@/assets/global.scss'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 // import '@/assets/tagcanvas.js'

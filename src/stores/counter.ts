@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { PrizeData, MemberData } from '@/utils/custom-types'
 
@@ -19,14 +19,24 @@ import type { PrizeData, MemberData } from '@/utils/custom-types'
 // 0 - 一次抽完
 // 99 - 自訂人數
 export const useCounterStore = defineStore('counter', () => {
-  // const count = ref(0)
-  // const doubleCount = computed(() => count.value * 2)
-  // function increment() {
-  //   count.value++
-  // }
   const drawTitle = ref<string>('')
   const prizeList = ref<PrizeData[]>([])
   const memberList = ref<MemberData[]>([])
 
-  return { drawTitle, prizeList, memberList }
+  const setLocalStorageData = (key: string, data: PrizeData[] | MemberData[]) => {
+    localStorage.setItem(key, JSON.stringify(data))
+  }
+
+  const updateListFromLocalStorage = (key: string, list: Ref<PrizeData[] | MemberData[]>) => {
+    const localStorageData = localStorage.getItem(key)
+    if (localStorageData) {
+      list.value = JSON.parse(localStorageData)
+    }
+  }
+  const updateStoreListData = () => {
+    updateListFromLocalStorage('prize', prizeList)
+    updateListFromLocalStorage('member', memberList)
+  }
+
+  return { drawTitle, prizeList, memberList, updateStoreListData, setLocalStorageData }
 })

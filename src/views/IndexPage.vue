@@ -1,15 +1,28 @@
+<!-- 背景特效／抽獎／音效 開關 + 選單 + Canvas 抽獎動畫-->
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import TagCanvas from '@/assets/tagcanvas.js'
 // import TitleComponent from '@/views/TitleComponent.vue'
 import { MessageError } from '@/components/message'
 import SnowBackground from '@/views/SnowBackground.vue'
 import IndexPageMenuDrawer from './IndexPageMenuDrawer.vue'
+import { useCounterStore } from '@/stores/counter'
 
 type TagData = {
   key: number
   name: string
 }
+
+const store = useCounterStore()
+
+const datas = computed(() => {
+  return store.memberList.map(({ key, name }) => {
+    return {
+      key,
+      name
+    }
+  })
+})
 
 const MAIN_ELEMENT_SELECTOR = '#main'
 const ROOT_CANVAS_ID = 'rootcanvas'
@@ -78,6 +91,10 @@ const stop = () => {
   toggleIsRunning()
 }
 
+watch(datas, () => {
+  // debugger
+  reloadTagCanvas()
+})
 const stateConfig = reactive({
   thisRound: {
     mode: '',
@@ -88,6 +105,7 @@ const stateConfig = reactive({
 })
 
 onMounted(() => {
+  store.updateStoreListData()
   startTagCanvas()
   addEventListener('resize', reportWindowSize)
 })
@@ -101,16 +119,11 @@ onUnmounted(() => {
     <SnowBackground></SnowBackground>
     <el-header class="flex items-center justify-end p-0 z-10">
       <!-- <TitleComponent></TitleComponent> -->
-      <div class="hanburger bg-gray-600 me-2 cursor-pointer" @click="toggleDrawerVisible">
-        <div class="hanburger-bar" />
-        <div class="hanburger-bar" />
-        <div class="hanburger-bar" />
-      </div>
-      <IndexPageMenuDrawer v-model:isVisible="drawerVisible"></IndexPageMenuDrawer>
+      <IndexPageMenuDrawer></IndexPageMenuDrawer>
     </el-header>
     <el-main id="main" class="p-0">
       <div id="tags">
-        <ul v-for="item in luckyBallData" :key="item.key">
+        <ul v-for="item in datas" :key="item.key">
           <li>
             <a href="javascript:void(0);">
               {{ item.name ? item.name : item.key }}

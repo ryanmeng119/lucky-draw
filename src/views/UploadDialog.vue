@@ -14,7 +14,7 @@
         </el-radio-group>
         <el-checkbox v-model="overwrite" class="me-1" label="覆蓋名單" />
       </div>
-      <div v-if="currRadio === SOURCE.CSV">
+      <div v-show="currRadio === SOURCE.CSV">
         <el-upload
           ref="upload"
           v-model:file-list="fileList"
@@ -26,13 +26,13 @@
           :on-remove="handleRemove"
           :on-exceed="handleExceed"
         >
-          <el-button type="primary" class="w-20 basic-btn-config">選擇檔案</el-button>
+          <el-button type="primary" class="w-20" style="height: 28px">選擇檔案</el-button>
         </el-upload>
       </div>
-      <div v-if="currRadio === SOURCE.INPUT">
+      <div v-show="currRadio === SOURCE.INPUT">
         <!-- 名單 -->
         <el-form
-          v-if="props.uploadType === UPLOAD_TYPE.MEMBER"
+          v-show="props.uploadType === UPLOAD_TYPE.MEMBER"
           :model="memberFormData"
           label-position="top"
         >
@@ -45,7 +45,7 @@
         </el-form>
         <!-- 獎項 -->
         <el-form
-          v-if="props.uploadType === UPLOAD_TYPE.PRIZE"
+          v-show="props.uploadType === UPLOAD_TYPE.PRIZE"
           :model="prizeFormData"
           label-position="top"
         >
@@ -53,17 +53,15 @@
             <el-input v-model="prizeFormData.name" placeholder="請輸入獎項名稱"></el-input>
           </el-form-item>
           <el-form-item label="獎項數量">
-            <el-input v-model="prizeFormData.number" placeholder="請輸入獎項數量"></el-input>
+            <el-input v-model="prizeFormData.quantity" placeholder="請輸入獎項數量"></el-input>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <template #footer>
       <span class="flex justify-center">
-        <el-button class="w-20 basic-btn-config" @click="closeDialog">取 消</el-button>
-        <el-button type="primary" class="w-20 basic-btn-config" @click="submitUpload"
-          >確 認</el-button
-        >
+        <el-button class="w-20" @click="closeDialog">取 消</el-button>
+        <el-button type="primary" class="w-20" @click="submitUpload">確 認</el-button>
       </span>
     </template>
   </el-dialog>
@@ -75,7 +73,7 @@ import Papa from 'papaparse'
 import { useCounterStore } from '@/stores/counter'
 import type { PrizeData, MemberData, UploadType } from '@/utils/custom-types'
 import { storeToRefs } from 'pinia'
-import { UPLOAD_TYPE } from '@/utils/const'
+import { UPLOAD_TYPE } from '@/utils/enums'
 
 const store = useCounterStore()
 const { memberList, prizeList } = storeToRefs(store)
@@ -121,7 +119,7 @@ const memberFormData = ref({
 
 const prizeFormData = ref({
   name: '',
-  number: ''
+  quantity: ''
 })
 
 const currentData = ref<Array<MemberData | PrizeData>>([])
@@ -146,7 +144,7 @@ const parseCSV = (file: File) => {
           } else {
             return {
               ...commonData,
-              number: Number(item[1].trim())
+              quantity: Number(item[1].trim())
             }
           }
         })
@@ -185,10 +183,6 @@ const submitUpload = () => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.el-dialog__body) {
-  padding: 10px 20px;
-}
-
 .upload-border {
   border: solid 1px #dcdfe6;
   border-radius: 4px;
@@ -200,11 +194,5 @@ const submitUpload = () => {
   li {
     margin: 0;
   }
-}
-
-.basic-btn-config {
-  font-size: 12px;
-  font-weight: 400;
-  height: 28px;
 }
 </style>
