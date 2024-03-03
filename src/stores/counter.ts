@@ -18,16 +18,41 @@ import type { PrizeData, MemberData } from '@/utils/custom-types'
 // 1 - 抽 1 人
 // 0 - 一次抽完
 // 99 - 自訂人數
+type DataType = PrizeData[] | MemberData[]
 export const useCounterStore = defineStore('counter', () => {
   const drawTitle = ref<string>('')
   const prizeList = ref<PrizeData[]>([])
   const memberList = ref<MemberData[]>([])
+  const resultsList = ref<[]>([])
 
-  const setLocalStorageData = (key: string, data: PrizeData[] | MemberData[]) => {
+  const updateList = (list: Ref<DataType>, key: string, data: DataType) => {
+    list.value = data
+    setLocalStorageData(key, data)
+  }
+  const updatePrizeList = (data: PrizeData[]) => {
+    updateList(prizeList, 'prize', data)
+  }
+
+  const updateMemberList = (data: MemberData[]) => {
+    updateList(memberList, 'member', data)
+  }
+
+  const updateResultsList = (data: []) => {
+    updateList(resultsList, 'results', data)
+  }
+
+  const setLocalStorageData = (key: string, data: DataType) => {
     localStorage.setItem(key, JSON.stringify(data))
   }
 
-  const updateListFromLocalStorage = (key: string, list: Ref<PrizeData[] | MemberData[]>) => {
+  const resetAll = () => {
+    localStorage.clear()
+    prizeList.value = []
+    memberList.value = []
+    resultsList.value = []
+  }
+
+  const updateListFromLocalStorage = (key: string, list: Ref<DataType>) => {
     const localStorageData = localStorage.getItem(key)
     if (localStorageData) {
       list.value = JSON.parse(localStorageData)
@@ -38,5 +63,15 @@ export const useCounterStore = defineStore('counter', () => {
     updateListFromLocalStorage('member', memberList)
   }
 
-  return { drawTitle, prizeList, memberList, updateStoreListData, setLocalStorageData }
+  return {
+    drawTitle,
+    prizeList,
+    memberList,
+    resultsList,
+    updateStoreListData,
+    updatePrizeList,
+    updateMemberList,
+    updateResultsList,
+    resetAll
+  }
 })

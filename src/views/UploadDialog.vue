@@ -172,12 +172,10 @@ const handleRemove: UploadProps['onRemove'] = () => {
 
 const submitUpload = () => {
   if (props.uploadType === UPLOAD_TYPE.MEMBER) {
-    memberList.value = currentData.value as MemberData[]
+    store.updateMemberList(currentData.value as MemberData[])
   } else {
-    prizeList.value = currentData.value as PrizeData[]
+    store.updatePrizeList(currentData.value as PrizeData[])
   }
-
-  localStorage.setItem(props.uploadType, JSON.stringify(currentData.value))
   closeDialog()
 }
 </script>

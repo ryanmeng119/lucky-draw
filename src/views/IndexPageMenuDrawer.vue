@@ -10,6 +10,12 @@ import { storeToRefs } from 'pinia'
 import PrizeConfig from './PrizeConfig.vue'
 import ComponentDrawer from '@/components/ComponentDrawer.vue'
 import { UPLOAD_TYPE } from '@/utils/enums'
+import { MessageSuccess, MessageWarning } from '@/components/message'
+
+type Option = {
+  key: string
+  label: string
+}
 
 const store = useCounterStore()
 const { prizeList } = storeToRefs(store)
@@ -35,7 +41,7 @@ const toggleUploadDialogVisible = (type: UploadType) => {
   uploadType.value = type
   uploadDialogVisible.value = !uploadDialogVisible.value
 }
-const resetOptions = [
+const resetOptions: Option[] = [
   {
     key: 'all',
     label: '全部'
@@ -53,8 +59,37 @@ const resetOptions = [
     label: '獎項'
   }
 ]
-const resetData = (item: string) => {
-  store.$reset()
+
+const resetList = (
+  listKey: 'resultsList' | 'memberList' | 'prizeList',
+  updateFunction: Function,
+  label: string
+) => {
+  if (store[listKey].length === 0) {
+    return MessageWarning(`${label}無資料，無需重置！`)
+  }
+  updateFunction([])
+  return MessageSuccess(`重置${label}成功`)
+}
+
+const resetData = ({ key, label }: Option) => {
+  switch (key) {
+    case 'all':
+      store.resetAll()
+      break
+    case 'results':
+      resetList('resultsList', store.updateResultsList, label)
+      break
+    case 'member':
+      resetList('memberList', store.updateMemberList, label)
+      break
+    case 'prize':
+      resetList('prizeList', store.updatePrizeList, label)
+      break
+    default:
+      MessageWarning('無此選項')
+      break
+  }
 }
 
 const prizeConfigVisible = ref(false)
@@ -147,7 +182,7 @@ const moveToUploadPrize = () => {
                   v-for="option in resetOptions"
                   :key="option.key"
                   class="flex items-center gap-1 cursor-pointer hover:bg-zinc-300 rounded py-1 pl-1"
-                  @click="resetData(option.key)"
+                  @click="resetData(option)"
                 >
                   <el-icon color="#DB4437" :size="14"> <CircleCloseFilled /> </el-icon>
                   <span>{{ option.label }}</span>
