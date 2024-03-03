@@ -1,8 +1,20 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { PrizeData } from '@/utils/custom-types'
 import { useCounterStore } from '@/stores/counter'
-import { storeToRefs } from 'pinia'
+import _ from 'lodash'
+
+const store = useCounterStore()
+
+const props = defineProps<{
+  isVisible: boolean
+  prizeList: PrizeData[]
+}>()
+
+const emits = defineEmits(['update:isVisible'])
+
+const formData = ref<PrizeData[]>([])
+const isVisible = computed(() => props.isVisible)
 
 const prizeTotal = computed(() =>
   props.prizeList.reduce((total, data) => {
@@ -10,31 +22,28 @@ const prizeTotal = computed(() =>
   }, 0)
 )
 
-const props = defineProps<{
-  isVisible: boolean
-  prizeList: PrizeData[]
-}>()
-
-const formData = ref()
-
-const emits = defineEmits(['update:isVisible'])
-
 const closeDialog = () => {
   emits('update:isVisible', false)
 }
-const updateQuantity = (prize: PrizeData, val: number | null) => {
-  if (!val) {
+const updateQuantity = (prize: PrizeData, newVal: number) => {
+  if (!newVal) {
     prize.quantity = 0
   }
 }
-const onSubmit = () => {}
+const onSubmit = () => {
+  store.updatePrizeList(formData.value)
+  closeDialog()
+}
 
-onMounted(() => {
-  debugger
+watch(isVisible, (val: boolean) => {
+  if (val) {
+    formData.value = _.cloneDeep(props.prizeList)
+  }
 })
 </script>
 
 <template>
+  <!-- NOTE: el-dialog 需要多包 div 包住，單獨放在 template 內無法貼上 CSS 標籤.  -->
   <div>
     <el-dialog
       :model-value="props.isVisible"
@@ -52,12 +61,12 @@ onMounted(() => {
           </div>
         </div>
       </template>
-      <el-form :model="formData">
-        <el-form-item v-for="prize in prizeList" :key="'prize' + prize.key" :label="prize.name">
+      <el-form>
+        <el-form-item v-for="data in formData" :key="'prize' + data.key" :label="data.name">
           <el-input-number
-            v-model="prize.quantity"
+            v-model="data.quantity"
             :min="0"
-            @change="(val: number) => updateQuantity(prize, val)"
+            @change="updateQuantity(data, $event)"
           />
         </el-form-item>
       </el-form>
