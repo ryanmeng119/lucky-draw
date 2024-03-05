@@ -7,10 +7,11 @@ import type { UploadType } from '@/utils/custom-types'
 import { ref } from 'vue'
 import { useCounterStore } from '@/stores/counter'
 import { storeToRefs } from 'pinia'
-import PrizeConfig from './PrizeConfig.vue'
+import PrizeConfigDialog from './PrizeConfigDialog.vue'
 import ComponentDrawer from '@/components/ComponentDrawer.vue'
 import { UPLOAD_TYPE } from '@/utils/enums'
 import { MessageSuccess, MessageWarning } from '@/components/message'
+// import InspectDialog from './InspectDialog.vue'
 
 type Option = {
   key: string
@@ -40,6 +41,11 @@ const uploadDialogVisible = ref(false)
 const toggleUploadDialogVisible = (type: UploadType) => {
   uploadType.value = type
   uploadDialogVisible.value = !uploadDialogVisible.value
+}
+
+const InspectDialogVisible = ref(false)
+const toggleInspectDialogVisible = () => {
+  InspectDialogVisible.value = !InspectDialogVisible.value
 }
 const resetOptions: Option[] = [
   {
@@ -192,10 +198,14 @@ const moveToUploadPrize = () => {
           </div>
         </div>
         <UploadDialog
-          v-model:is-visible="uploadDialogVisible"
+          v-model:dialogVisible="uploadDialogVisible"
           :upload-type="uploadType"
         ></UploadDialog>
-        <PrizeConfig v-model:isVisible="prizeConfigVisible" :prize-list="prizeList"></PrizeConfig>
+        <PrizeConfigDialog
+          v-model:dialogVisible="prizeConfigVisible"
+          :prize-list="prizeList"
+        ></PrizeConfigDialog>
+        <!-- <InspectDialog v-model:dialog-visible=""></InspectDialog> -->
       </div>
     </template>
   </ComponentDrawer>

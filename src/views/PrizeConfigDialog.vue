@@ -7,14 +7,14 @@ import _ from 'lodash'
 const store = useCounterStore()
 
 const props = defineProps<{
-  isVisible: boolean
+  dialogVisible: boolean
   prizeList: PrizeData[]
 }>()
 
-const emits = defineEmits(['update:isVisible'])
+const emits = defineEmits(['update:dialogVisible'])
 
 const formData = ref<PrizeData[]>([])
-const isVisible = computed(() => props.isVisible)
+const dialogVisible = computed(() => props.dialogVisible)
 
 const prizeTotal = computed(() =>
   props.prizeList.reduce((total, data) => {
@@ -23,7 +23,7 @@ const prizeTotal = computed(() =>
 )
 
 const closeDialog = () => {
-  emits('update:isVisible', false)
+  emits('update:dialogVisible', false)
 }
 const updateQuantity = (prize: PrizeData, newVal: number) => {
   if (!newVal) {
@@ -35,7 +35,7 @@ const onSubmit = () => {
   closeDialog()
 }
 
-watch(isVisible, (val: boolean) => {
+watch(dialogVisible, (val: boolean) => {
   if (val) {
     formData.value = _.cloneDeep(props.prizeList)
   }
@@ -46,7 +46,7 @@ watch(isVisible, (val: boolean) => {
   <!-- NOTE: el-dialog 需要多包 div 包住，單獨放在 template 內無法貼上 CSS 標籤.  -->
   <div>
     <el-dialog
-      :model-value="props.isVisible"
+      :model-value="dialogVisible"
       class="dialog-model"
       :width="450"
       :before-close="closeDialog"

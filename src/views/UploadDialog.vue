@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :model-value="props.isVisible"
+    :model-value="props.dialogVisible"
     :title="title"
     width="450px"
     :before-close="closeDialog"
@@ -79,17 +79,17 @@ const store = useCounterStore()
 const { memberList, prizeList } = storeToRefs(store)
 
 const props = defineProps<{
-  isVisible: boolean
+  dialogVisible: boolean
   uploadType: UploadType
 }>()
 
-const emits = defineEmits(['update:isVisible'])
+const emits = defineEmits(['update:dialogVisible'])
 
 const title = computed(() => `匯入${props.uploadType === UPLOAD_TYPE.MEMBER ? '名單' : '獎項'}`)
 
 const closeDialog = () => {
   upload.value?.clearFiles()
-  emits('update:isVisible', false)
+  emits('update:dialogVisible', false)
 }
 
 const SOURCE = {
